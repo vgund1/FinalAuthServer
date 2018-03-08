@@ -31,6 +31,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -416,7 +417,8 @@ public abstract class AbstractUserDetailsAuthenticationProvider implements
 
 	
 	public PrivateKey getPrivate() throws Exception {
-		byte[] keyBytes = Files.readAllBytes(new File("KeyPair/privateKey").toPath());
+		File f=new ClassPathResource("privateKey").getFile();
+		byte[] keyBytes = Files.readAllBytes(f.toPath());
 		System.out.println(keyBytes);
 		System.out.println(new String(keyBytes,"ISO-8859-1"));
 		PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
