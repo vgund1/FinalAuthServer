@@ -5,3 +5,9 @@ server:
 logging:
  level:
   org.springframework.security: DEBUG
+  
+spring:
+  application:
+    name: my-app-name
+  jmx:
+    default-domain: my-app-nam
