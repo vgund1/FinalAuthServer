@@ -51,8 +51,4 @@
         </plugins>
     </build>
     <groupId>com.mdshkv.md.mediapp</groupId>
-    <modules>
-    	<module>../auth-server</module>
-    	<module>../resource-server</module>
-    </modules>
 </project>

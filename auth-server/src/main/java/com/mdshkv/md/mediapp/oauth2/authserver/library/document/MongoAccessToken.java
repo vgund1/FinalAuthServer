@@ -7,7 +7,6 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
 import com.mdshkv.md.mediapp.oauth2.authserver.library.converter.SerializableObjectConverter;
 
-//@Document(collection = "oauthAccessTokens")
 @Document(collection = "access_token")
 public class MongoAccessToken {
 

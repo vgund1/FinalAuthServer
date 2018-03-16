@@ -42,6 +42,11 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+        	<groupId>com.mdhskv</groupId>
+        	<artifactId>MediCom-Service</artifactId>
+        	<version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     
     <packaging>war</packaging>

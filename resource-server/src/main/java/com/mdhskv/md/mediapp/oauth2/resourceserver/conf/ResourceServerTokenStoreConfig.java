@@ -1,4 +1,4 @@
-package com.mdshkv.md.mediapp.oauth2.resourceserver.conf;
+package com.mdhskv.md.mediapp.oauth2.resourceserver.conf;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

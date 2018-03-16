@@ -1,13 +1,6 @@
 package com.mdshkv.md.mediapp.oauth2.authserver.conf;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +10,7 @@ import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -32,17 +26,21 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
+import org.springframework.security.oauth2.provider.refresh.RefreshTokenGranter;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.mdshkv.md.mediapp.oauth2.authserver.ResourceOwnerPasswordTokenGranter;
 import com.mdshkv.md.mediapp.oauth2.authserver.library.MongoAuthorizationCodeServices;
@@ -56,6 +54,8 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     @Autowired private TokenStore tokenStore;
     @Autowired(required = false) private JwtAccessTokenConverter accessTokenConverter;
 
+   
+    
     @Bean
     public MongoClientDetailsService clientDetailsService() {
         return new MongoClientDetailsService();
@@ -80,9 +80,23 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
                 .authenticationManager(authenticationManager);
     endpoints.exceptionTranslator(loggingExceptionTranslator()); 
     OAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService());
-    endpoints.tokenGranter(new ResourceOwnerPasswordTokenGranter(authenticationManager, tokenServices(), clientDetailsService(), requestFactory));
+    //endpoints.tokenGranter(new ResourceOwnerPasswordTokenGranter(authenticationManager, tokenServices(), clientDetailsService(), requestFactory));
+    
+    List<TokenGranter> tokenGranters = new ArrayList<TokenGranter>();
+    tokenGranters.add(new ResourceOwnerPasswordTokenGranter(authenticationManager, tokenServices(), clientDetailsService(), requestFactory));
+    tokenGranters.add(new RefreshTokenGranter(tokenServices(), clientDetailsService(), requestFactory));
+
+    TokenGranter tokenGranter = new CompositeTokenGranter(tokenGranters);
+
+    endpoints.tokenGranter(tokenGranter);
+    
     }
 
+    
+    
+ 
+    
+    
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
         oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");

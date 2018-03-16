@@ -1,4 +1,4 @@
-package com.mdshkv.md.mediapp.oauth2.resourceserver.conf;
+package com.mdhskv.md.mediapp.oauth2.resourceserver.conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +30,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/**").access("#oauth2.hasScope('read-foo')")
+                .antMatchers(HttpMethod.POST, "/**").access("#oauth2.hasScope('read-foo')")
                 .and()
                 .headers().addHeaderWriter(new HeaderWriter() {
             @Override

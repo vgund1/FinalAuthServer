@@ -35,7 +35,6 @@ public class ClientCredentialsTokenEndpointFilter extends AbstractAuthentication
 
 	public ClientCredentialsTokenEndpointFilter() {
 		this("/oauth/token");
-		System.out.println("*****************************************************");
 	}
 	
 	public ClientCredentialsTokenEndpointFilter(String path) {
@@ -123,6 +122,7 @@ public class ClientCredentialsTokenEndpointFilter extends AbstractAuthentication
 				uri = uri.substring(0, pathParamIndex);
 			}
 			String clientId = request.getParameter("client_id");
+			System.out.println("************************"+clientId);
 			if (clientId == null) {
 				return false;
 			}

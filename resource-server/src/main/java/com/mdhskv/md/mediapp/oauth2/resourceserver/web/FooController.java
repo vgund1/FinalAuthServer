@@ -1,13 +1,12 @@
-package com.mdshkv.md.mediapp.oauth2.resourceserver.web;
+package com.mdhskv.md.mediapp.oauth2.resourceserver.web;
+
+import java.security.SecureRandom;
 
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.security.SecureRandom;
 
 @RestController
 public class FooController {

@@ -1,19 +1,3 @@
-/*
- * Copyright 2004, 2005, 2006 Acegi Technology Pty Limited
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.mdshkv.md.mediapp.oauth2.authserver;
 
 import java.io.File;
@@ -212,35 +196,6 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
-		logger.info("req ******************:"+request.getParameter("username"));
-		logger.info("req ******************:"+request.getParameter("password"));
-		
-
-		
-		/*//String username = null;
-		String password = null;
-		try {
-			 username = decryptText(request.getParameter("username"));
-			 password=decryptText(request.getParameter("password"));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		logger.info("req *******after***********:"+password);
-		logger.info("req ******************:"+username);
-		*/
-		//request.setAttribute("username",username);
-		//request.setAttribute("password",password);
-		logger.info("req *******after***********:"+request.getParameter("username"));
-		logger.info("req ******************:"+request.getParameter("password"));
-		
-		Enumeration<String> headerNames = request.getHeaderNames();
-		while (headerNames.hasMoreElements()) {
-			
-			String headerName = headerNames.nextElement();
-			String headerValue = request.getHeader(headerName);
-			logger.info("req ******************:heder name :"+headerName +"  : "+headerValue);
-		}
 		
 		if (!requiresAuthentication(request, response)) {
 			chain.doFilter(request, response);
@@ -251,16 +206,6 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 		if (logger.isDebugEnabled()) {
 			logger.debug("Request is to process authentication");
 		}
-		logger.info("req ******************:"+req);
-		logger.info("req ******************:"+req.toString());
-		logger.info("req ******************:"+req.getContentType());
-		logger.info("req ******************:"+req.getLocalAddr());
-		logger.info("req ******************:"+req.getRemoteHost());
-		logger.info("req ******************:"+request.getHeaderNames());
-		logger.info("req ******************:"+request);
-		logger.info("req ******************:"+request.getParameter("username"));
-		logger.info("req ******************:"+request.getParameter("password"));
-		
 		
 
 		Authentication authResult;
@@ -513,21 +458,5 @@ public abstract class AbstractAuthenticationProcessingFilter extends GenericFilt
 	protected AuthenticationFailureHandler getFailureHandler() {
 		return failureHandler;
 	}
-/*	public String decryptText(String msg)
-			throws Exception {
-		this.cipher = Cipher.getInstance("RSA");
-		PrivateKey key=getPrivate();
-		this.cipher.init(Cipher.DECRYPT_MODE, key);
-		return new String(cipher.doFinal(Base64.decodeBase64(msg)), "UTF-8");
-	}
 
-	
-	public PrivateKey getPrivate() throws Exception {
-		byte[] keyBytes = Files.readAllBytes(new File("KeyPair/privateKey").toPath());
-		System.out.println(keyBytes);
-		System.out.println(new String(keyBytes,"ISO-8859-1"));
-		PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-		KeyFactory kf = KeyFactory.getInstance("RSA");
-		return kf.generatePrivate(spec);
-	}*/
 }

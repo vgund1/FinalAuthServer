@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-//@Document(collection = "oauthClientDetails")
 @Document(collection = "client_details")
 public class MongoClientDetails implements ClientDetails {
 
