@@ -50,4 +50,15 @@ public class MongoRefreshToken {
     public void setAuthentication(OAuth2Authentication authentication) {
         this.authentication = SerializableObjectConverter.serialize(authentication);
     }
+
+	@Override
+	public String toString() {
+		super.toString();
+		return "MongoRefreshToken [id=" + id + ", tokenId=" + tokenId + ", token=" + token + ", authentication="
+				+ authentication + "]";
+	}
+    
+    
+    
+    
 }

@@ -38,37 +38,7 @@ import org.springframework.security.core.userdetails.cache.NullUserCache;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-/**
- * A base {@link AuthenticationProvider} that allows subclasses to override and work with
- * {@link org.springframework.security.core.userdetails.UserDetails} objects. The class is
- * designed to respond to {@link UsernamePasswordAuthenticationToken} authentication
- * requests.
- *
- * <p>
- * Upon successful validation, a <code>UsernamePasswordAuthenticationToken</code> will be
- * created and returned to the caller. The token will include as its principal either a
- * <code>String</code> representation of the username, or the {@link UserDetails} that was
- * returned from the authentication repository. Using <code>String</code> is appropriate
- * if a container adapter is being used, as it expects <code>String</code> representations
- * of the username. Using <code>UserDetails</code> is appropriate if you require access to
- * additional properties of the authenticated user, such as email addresses,
- * human-friendly names etc. As container adapters are not recommended to be used, and
- * <code>UserDetails</code> implementations provide additional flexibility, by default a
- * <code>UserDetails</code> is returned. To override this default, set the
- * {@link #setForcePrincipalAsString} to <code>true</code>.
- * <p>
- * Caching is handled by storing the <code>UserDetails</code> object being placed in the
- * {@link UserCache}. This ensures that subsequent requests with the same username can be
- * validated without needing to query the {@link UserDetailsService}. It should be noted
- * that if a user appears to present an incorrect password, the {@link UserDetailsService}
- * will be queried to confirm the most up-to-date password was used for comparison.
- * Caching is only likely to be required for stateless applications. In a normal web
- * application, for example, the <tt>SecurityContext</tt> is stored in the user's session
- * and the user isn't reauthenticated on each request. The default cache implementation is
- * therefore {@link NullUserCache}.
- *
- * @author Ben Alex
- */
+
 @Component
 public abstract class AbstractUserDetailsAuthenticationProvider implements
 		AuthenticationProvider, InitializingBean, MessageSourceAware {
@@ -91,24 +61,7 @@ public abstract class AbstractUserDetailsAuthenticationProvider implements
 	// ~ Methods
 	// ========================================================================================================
 
-	/**
-	 * Allows subclasses to perform any additional checks of a returned (or cached)
-	 * <code>UserDetails</code> for a given authentication request. Generally a subclass
-	 * will at least compare the {@link Authentication#getCredentials()} with a
-	 * {@link UserDetails#getPassword()}. If custom logic is needed to compare additional
-	 * properties of <code>UserDetails</code> and/or
-	 * <code>UsernamePasswordAuthenticationToken</code>, these should also appear in this
-	 * method.
-	 *
-	 * @param userDetails as retrieved from the
-	 * {@link #retrieveUser(String, UsernamePasswordAuthenticationToken)} or
-	 * <code>UserCache</code>
-	 * @param authentication the current request that needs to be authenticated
-	 *
-	 * @throws AuthenticationException AuthenticationException if the credentials could
-	 * not be validated (generally a <code>BadCredentialsException</code>, an
-	 * <code>AuthenticationServiceException</code>)
-	 */
+	
 	protected abstract void additionalAuthenticationChecks(UserDetails userDetails,
 			UsernamePasswordAuthenticationToken authentication)
 			throws AuthenticationException;
@@ -130,22 +83,24 @@ public abstract class AbstractUserDetailsAuthenticationProvider implements
 		
 		String username = (authentication.getPrincipal() == null) ? "NONE_PROVIDED"
 				: authentication.getName();
-		logger.info("********************custom auth****************************9+"+username);
+		logger.info("********************AbstractUserDetailsAuthenticationProvider auth****************************9+"+username);
 		try {
 			username=decryptText(username);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("decrypt errror******************88");
+			//e.printStackTrace();
 		}
 		boolean cacheWasUsed = true;
 		UserDetails user = this.userCache.getUserFromCache(username);
-
+		logger.info("********************AbstractUserDetailsAuthenticationProvider auth**************************user8+"+user);
 		if (user == null) {
 			cacheWasUsed = false;
 
 			try {
 				user = retrieveUser(username,
 						(UsernamePasswordAuthenticationToken) authentication);
+				logger.info("********************AbstractUserDetailsAuthenticationProvider auth**************************user+"+user);
 			}
 			catch (UsernameNotFoundException notFound) {
 				logger.debug("User '" + username + "' not found");

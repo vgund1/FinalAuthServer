@@ -14,6 +14,7 @@ public class MongoUser {
     private String username;
     private String password;
     private Set<String> roles;
+    private String userId;
 
     public String getId() {
         return id;
@@ -46,4 +47,12 @@ public class MongoUser {
     public void setRoles(Set<String> roles) {
         this.roles = roles;
     }
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 }

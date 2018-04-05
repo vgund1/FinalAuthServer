@@ -79,13 +79,16 @@ public class ClientCredentialsTokenEndpointFilter extends AbstractAuthentication
 		}
 		
 		String packageName =request.getHeader(MongoClientDetails.PACKAGE_NAME);
-		
+		System.out.println("************************ClientCredentialsTokenEndpointFilter packageName "+packageName);
 		ClientDetails clientDetails=mongoClientDetailsService.loadClientByPackageName(packageName);
+		
+		System.out.println("************************ClientCredentialsTokenEndpointFilter clientDetails "+clientDetails);
 		
 		String clientId =clientDetails.getClientId(); //request.getParameter("client_id"); //get it form DB and put in cache
 		String clientSecret = clientDetails.getClientSecret();//request.getParameter("client_secret");
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println("************************ClientCredentialsTokenEndpointFilter clientDetails "+authentication);
 		if ((authentication != null) && (authentication.isAuthenticated())) {
 			return authentication;
 		}
@@ -98,7 +101,7 @@ public class ClientCredentialsTokenEndpointFilter extends AbstractAuthentication
 		clientId = clientId.trim();
 		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(clientId,
 				clientSecret);
-
+		
 		return getAuthenticationManager().authenticate(authRequest);
 	}
 
@@ -122,7 +125,7 @@ public class ClientCredentialsTokenEndpointFilter extends AbstractAuthentication
 				uri = uri.substring(0, pathParamIndex);
 			}
 			String clientId = request.getParameter("client_id");
-			System.out.println("************************"+clientId);
+			System.out.println("************************ClientCredentialsTokenEndpointFilter clientId "+clientId);
 			if (clientId == null) {
 				return false;
 			}

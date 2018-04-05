@@ -80,6 +80,11 @@ public class ResourceOwnerPasswordTokenGranter extends AbstractTokenGranter {
 		Authentication userAuth = new UsernamePasswordAuthenticationToken(username, password);
 		((AbstractAuthenticationToken) userAuth).setDetails(parameters);
 		try {
+			
+			System.out.println("**************calling to auth********************userAuth: "+userAuth);
+			System.out.println("**************calling to auth********************authenticationManager: "+authenticationManager);
+			System.out.println("**************calling to auth********************authenticationManager: "+authenticationManager.getClass());
+			
 			userAuth = authenticationManager.authenticate(userAuth);
 		}
 		catch (AccountStatusException ase) {

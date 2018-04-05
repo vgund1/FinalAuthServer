@@ -2,19 +2,36 @@ server:
   context-path: /auth-service
   port: 8443
  
+#spring:
+#  data:
+#    mongodb:
+#      #host: 35.171.152.40
+#      host: localhost
+#      port: 27017
+#      database: VanGuardAuth_DB_AWS_0001
+#      username: vijay
+#      password: vijay
+#  jackson:
+#    property-naming-strategy: SNAKE_CASE
+
 spring:
   data:
     mongodb:
-      host: 127.0.0.1
+      #authentication-database: admin
+      #password: Admin@321$
       port: 27017
+      host: localhost
+      #host: 35.171.152.40
+      #username: myUserAdmin
+      #database: VanGuardAuth_DB_AWS_0001
       database: oauth
-#      username:
-#      password:
-  jackson:
-    property-naming-strategy: SNAKE_CASE
 
 logging:
  level:
-  org.springframework.security: DEBUG
+  org.springframework.security: INFO
+    
+
+ 
+   
   
 

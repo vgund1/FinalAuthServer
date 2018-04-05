@@ -202,4 +202,20 @@ public class MongoClientDetails implements ClientDetails {
 	public void setPackageName(String packageName) {
 		this.packageName = packageName;
 	}
+
+	@Override
+	public String toString() {
+		return "MongoClientDetails [id=" + id + ", clientId=" + clientId + ", resourceIds=" + resourceIds
+				+ ", secretRequired=" + secretRequired + ", clientSecret=" + clientSecret + ", scoped=" + scoped
+				+ ", scope=" + scope + ", authorizedGrantTypes=" + authorizedGrantTypes + ", registeredRedirectUri="
+				+ registeredRedirectUri + ", authorities=" + authorities + ", accessTokenValiditySeconds="
+				+ accessTokenValiditySeconds + ", refreshTokenValiditySeconds=" + refreshTokenValiditySeconds
+				+ ", autoApprove=" + autoApprove + ", additionalInformation=" + additionalInformation + ", packageName="
+				+ packageName + "]";
+	}
+	
+	
+	
+	
+	
 }

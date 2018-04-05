@@ -40,7 +40,7 @@ public class AuthServerSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
     	http.csrf().disable()
         .authorizeRequests()
-        .antMatchers("/login*","/getConfig*").anonymous()
+        .antMatchers("/login*").anonymous()
         .anyRequest().authenticated().and()
     	.httpBasic().disable().authenticationProvider(daoAuthenticationProvider);
     	http.anonymous().disable();
@@ -48,7 +48,7 @@ public class AuthServerSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-    	web.ignoring().antMatchers("/login*","/getConfig*");
+    	web.ignoring().antMatchers("/login*");
     	
     }
 
@@ -58,9 +58,5 @@ public class AuthServerSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-    
-    
-    
-    
     
 }

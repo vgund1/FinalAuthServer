@@ -14,7 +14,7 @@ public class ResourceServerTokenStoreConfig {
     public ResourceServerTokenServices remoteTokenServices() {
         RemoteTokenServices tokenService = new RemoteTokenServices();
         tokenService.setCheckTokenEndpointUrl(
-                "http://localhost:8080/auth-server-1.0-SNAPSHOT/oauth/check_token");
+                "http://localhost:8443/auth-service/medicom/v1/checktoken");
         tokenService.setClientId("web-client");
         tokenService.setClientSecret("web-client-secret");
         return tokenService;

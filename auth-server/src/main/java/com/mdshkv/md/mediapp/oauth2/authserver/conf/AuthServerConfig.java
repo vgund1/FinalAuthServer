@@ -2,32 +2,24 @@ package com.mdshkv.md.mediapp.oauth2.authserver.conf;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.CompositeTokenGranter;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
@@ -40,15 +32,17 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import com.mdshkv.md.mediapp.oauth2.authserver.CustomOauthException;
+import com.mdshkv.md.mediapp.oauth2.authserver.EnableMediComAuthorizationServer;
 import com.mdshkv.md.mediapp.oauth2.authserver.ResourceOwnerPasswordTokenGranter;
 import com.mdshkv.md.mediapp.oauth2.authserver.library.MongoAuthorizationCodeServices;
 import com.mdshkv.md.mediapp.oauth2.authserver.library.MongoClientDetailsService;
 
 
 @Configuration
-@EnableAuthorizationServer
+//@EnableAuthorizationServer
+@EnableMediComAuthorizationServer
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private TokenStore tokenStore;
@@ -90,6 +84,21 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     endpoints.tokenGranter(tokenGranter);
     
+    
+    endpoints
+    // other endpoints
+    .exceptionTranslator(e -> {
+        if (e instanceof OAuth2Exception) {
+            OAuth2Exception oAuth2Exception = (OAuth2Exception) e;
+
+            return ResponseEntity
+                    .status(oAuth2Exception.getHttpErrorCode())
+                    .body(new CustomOauthException(oAuth2Exception.getMessage()));
+        } else {
+            throw e;
+        }
+    });
+    
     }
 
     
@@ -118,15 +127,15 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
         DefaultTokenServices tokenServices = new DefaultTokenServices();
         tokenServices.setSupportRefreshToken(true);
         tokenServices.setTokenStore(tokenStore);
-        tokenServices.setAccessTokenValiditySeconds(1000);
-        tokenServices.setRefreshTokenValiditySeconds(100000);
+       // tokenServices.setAccessTokenValiditySeconds(1000);
+       // tokenServices.setRefreshTokenValiditySeconds(100000);
 
         List<TokenEnhancer> enhancers = new ArrayList<>();
         if (accessTokenConverter != null) {
             enhancers.add(accessTokenConverter);
         }
 
-        //Some custom enhancer
+       /* //Some custom enhancer
         enhancers.add(new TokenEnhancer() {
             @Override
             public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
@@ -146,7 +155,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
                 defaultOAuth2AccessToken.setScope(existingScopes);
                 return defaultOAuth2AccessToken;
             }
-        });
+        });*/
 
         TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
         enhancerChain.setTokenEnhancers(enhancers);
@@ -161,8 +170,9 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
             @Override
             public ResponseEntity<OAuth2Exception> translate(Exception e) throws Exception {
                 // This is the line that prints the stack trace to the log. You can customise this to format the trace etc if you like
-                e.printStackTrace();
+               // e.printStackTrace();
 
+            	System.out.println(e.toString());
                 // Carry on handling the exception
                 ResponseEntity<OAuth2Exception> responseEntity = super.translate(e);
                 HttpHeaders headers = new HttpHeaders();

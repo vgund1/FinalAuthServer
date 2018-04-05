@@ -86,7 +86,8 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 			presentedPassword=decryptText(presentedPassword);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+			//e.printStackTrace();
 		}
 		System.out.println("************************DaoAuthenticationProvider **additionalAuthenticationChecks***********presentedPassword  "+presentedPassword);
 		if (!passwordEncoder.isPasswordValid(userDetails.getPassword(),
